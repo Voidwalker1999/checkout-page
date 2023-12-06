@@ -15,26 +15,10 @@ function App() {
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [country, setCountry] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
-  const [cvv, setCvv] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [showShippingAddress, setShowShippingAddress] = useState(true); // Toggle state
   const [bankName, setBankName] = useState('');
   const [branch, setBranch] = useState('');
-
-  /**
-   * Handles the change event for the card number input field.
-   * Removes existing spaces and adds a space every 4 digits.
-   * Limits the input to 16 digits (excluding spaces).
-   * @param {Object} e - The event object.
-   */
-  const handleCardNumberChange = (e) => {
-    const input = e.target.value.replace(/\s/g, ''); // Remove existing spaces
-    const formattedInput = input.replace(/(\d{4})/g, '$1 ').trim(); // Add space every 4 digits
-    const cardNumber = formattedInput.substring(0, 19); // Limit to 16 digits (excluding spaces)
-    setCardNumber(cardNumber);
-  };
 
   /**
    * Clears all the input fields.
@@ -48,9 +32,6 @@ function App() {
     setCity('');
     setPostalCode('');
     setCountry('');
-    setCardNumber('');
-    setExpiryDate('');
-    setCvv('');
     setBankName('');
     setBranch('');
   };
@@ -71,20 +52,6 @@ function App() {
   };
 
   /**
-   * Returns the text for the proceed button based on the selected payment method.
-   * @returns {string|null} The text for the proceed button.
-   */
-  const getProceedButtonText = () => {
-    if (paymentMethod === 'card') {
-      return 'Proceed';
-    } else if (paymentMethod === 'bank') {
-      return 'Submit';
-    } else {
-      return null;
-    }
-  };
-
-  /**
    * Handles the click event for the proceed button.
    * Redirects to the Stripe payment gateway.
    */
@@ -93,6 +60,15 @@ function App() {
       // Redirect to Stripe payment gateway
       window.location.href = 'https://stripe.com';
     }
+  };
+
+  /**
+   * Handles the click event for the submit button for direct bank transaction.
+   * Performs the bank transaction.
+   */
+  const handleBankTransaction = () => {
+    // Perform bank transaction logic here
+    console.log('Performing bank transaction...');
   };
 
   return (
@@ -177,50 +153,20 @@ function App() {
         </form>
       </div>
 
-      {/* Card Details */}
+      {/* Proceed Button */}
       {paymentMethod === 'card' && (
         <div className="section">
           <h2 className="section-title">Card Details</h2>
-          <form>
-            <label htmlFor="cardHolderName">Card Holder's Name:</label>
-            <input type="text" id="cardHolderName" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} />
-
-            <label htmlFor="cardNumber">Card Number:</label>
-            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" value={cardNumber} onChange={handleCardNumberChange} />
-
-            <label htmlFor="expiryDate">Expiry Date:</label>
-            <input
-              type="text"
-              id="expiryDate"
-              placeholder="MM/YY"
-              value={expiryDate}
-              onChange={(e) => {
-                const input = e.target.value.replace(/\D/g, ''); // Remove non-digit characters
-                const formattedInput = input.replace(/(\d{2})(\d{0,2})/, '$1/$2'); // Add forward slash after 2 digits
-                const expiryMonth = formattedInput.substring(0, 2); // Extract the month part
-                const expiryDate = expiryMonth > 12 ? '12' : formattedInput.substring(0, 5); // Limit to 5 characters (MM/YY) and set to 12 if month is greater than 12
-                setExpiryDate(expiryDate);
-              }}
-            />
-
-            <label htmlFor="cvv">CVV:</label>
-            <input
-              type="text"
-              id="cvv"
-              placeholder="123"
-              maxLength="3"
-              value={cvv}
-              onChange={(e) => setCvv(e.target.value)}
-              onKeyPress={(e) => {
-                const keyCode = e.keyCode || e.which;
-                const keyValue = String.fromCharCode(keyCode);
-                const regex = /^[0-9]*$/; // Only allow numbers
-                if (!regex.test(keyValue)) {
-                  e.preventDefault();
-                }
-              }}
-            />
-          </form>
+          <button
+            className="button white-button"
+            onClick={handleProceed}
+            style={{ backgroundColor: 'white', border: '1px solid black' }} // Add border style
+            // Add hover style
+            onMouseEnter={(e) => (e.target.style.backgroundColor = 'lightblue')}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = 'white')}
+          >
+            <img src="../images/stripe-logo.png" alt="Pay with Stripe" style={{ width: '100px', height: 'auto' }} />
+          </button>
         </div>
       )}
 
@@ -238,6 +184,7 @@ function App() {
             <label htmlFor="bank-slip">Upload Bank Slip:</label>
             <input type="file" id="bank-slip" accept="image/*" />
           </form>
+          <button onClick={handleBankTransaction} className="button">Submit</button>
         </div>
       )}
 
@@ -245,12 +192,18 @@ function App() {
       {paymentMethod === 'paypal' && (
         <div className="section">
           <h2 className="section-title">PayPal</h2>
-          <button className="button">Pay with PayPal</button>
+          <button
+            className="button white-button"
+            onClick={handleProceed}
+            style={{ backgroundColor: 'white', border: '1px solid black' }} // Add border style
+            // Add hover style
+            onMouseEnter={(e) => (e.target.style.backgroundColor = 'lightblue')}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = 'white')}
+          >
+            <img src="../images/paypal-logo.png" alt="Pay with PayPal" style={{ width: '100px', height: 'auto' }} />
+          </button>
         </div>
       )}
-
-      {/* Proceed Button */}
-      {getProceedButtonText() && <button type="submit" className="button" onClick={handleProceed}>{getProceedButtonText()}</button>}
 
       {/* Clear Fields Button */}
       <button onClick={handleClearFields} className="button">Clear Fields</button>
