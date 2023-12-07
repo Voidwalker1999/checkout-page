@@ -194,7 +194,7 @@ function App() {
           <h2 className="section-title">PayPal</h2>
           <button
             className="button white-button"
-            onClick={handleProceed}
+            onClick={() => window.location.href = 'https://www.paypal.com'}
             style={{ backgroundColor: 'white', border: '1px solid black' }} // Add border style
             // Add hover style
             onMouseEnter={(e) => (e.target.style.backgroundColor = 'lightblue')}
