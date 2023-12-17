@@ -73,11 +73,11 @@ function App() {
 
   return (
     <div className="App">
-      <h1 className="title">Checkout Information</h1>
+      <h1 className="title">Checkout</h1>
 
       {/* Contact Information */}
       <div className="section">
-        <h2 className="section-title">Contact Information</h2>
+        <h2 className="section-title">Personal Details</h2>
         <form>
           <label htmlFor="name">Name:</label>
           <input type="text" id="name" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} />
@@ -107,11 +107,11 @@ function App() {
 
       {/* Shipping Address */}
       <div className="section">
-        <h2 className="section-title">Shipping Address</h2>
         <div className="toggle-container">
           <label htmlFor="toggleShippingAddress">Use Shipping Address:</label>
           <input type="checkbox" id="toggleShippingAddress" checked={showShippingAddress} onChange={handleToggleShippingAddress} />
         </div>
+        <h2 className="section-title">{showShippingAddress ? 'Shipping Address' : 'Pickup Address'}</h2>
         {showShippingAddress ? (
           <form>
             <label htmlFor="address">Address:</label>
@@ -165,7 +165,7 @@ function App() {
             onMouseEnter={(e) => (e.target.style.backgroundColor = 'lightblue')}
             onMouseLeave={(e) => (e.target.style.backgroundColor = 'white')}
           >
-            <img src="../images/stripe-logo.png" alt="Pay with Stripe" style={{ width: '100px', height: 'auto' }} />
+            <img src="../images/stripe-logo.png" alt="Pay with Stripe" style={{ width: '50px', height: 'auto' }} />
           </button>
         </div>
       )}
